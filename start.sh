@@ -1,4 +1,4 @@
-ODOO="16"
+ODOO="17"
 
 docker ps |grep docker-db-1 
 
