@@ -1,4 +1,4 @@
-ODOO="18"
+ODOO="13"
 
 docker ps |grep docker-db-1 
 
@@ -9,7 +9,7 @@ then
 	cd ..
 fi
 
-if [ $ODOO == "12" ]
+if [ $ODOO == "12" ] || [ $ODOO == "13" ]
 then
 
 PYTHONLIB="python-3.7"
