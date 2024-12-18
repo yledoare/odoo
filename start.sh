@@ -1,4 +1,24 @@
-ODOO="13"
+ODOO="14"
+
+install-local-deb () {
+  debian=$1
+  deb=$2
+  echo "Installing $deb"
+		[ -e download ] && rm download
+  		wget -q https://packages.debian.org/$debian/amd64/$deb/download 
+
+		URL=$(grep ftp.fr.debian.org download | cut -d '"' -f2)
+		if [ "$URL" = "" ]
+		then
+  			URL=$( grep http://security.debian.org/debian-security/ download  | cut -d '"' -f2)
+		fi
+		echo -e "\n Get $URL .. "
+		wget -q $URL
+		DEB=$(basename $URL)
+		dpkg -x $DEB .
+		rm $DEB
+		touch $debian-$deb-ok
+}
 
 docker ps |grep docker-db-1 
 
@@ -9,7 +29,7 @@ then
 	cd ..
 fi
 
-if [ $ODOO == "12" ] || [ $ODOO == "13" ]
+if [ $ODOO == "12" ] || [ $ODOO == "13" ] || [ $ODOO == "14" ]
 then
 
 PYTHONLIB="python-3.7"
@@ -20,21 +40,7 @@ if [ ! -e usr ]
 then
 	for PKG in libicu63 libnode64 nodejs node-less python3-pyldap python3-vatnumber python3-suds python3-gevent python3-feedparser python3-html2text python3-reportlab python3-psycopg2 python3-psutil libffi6 python3-pip python3-distutils python3-venv python-pip-whl $PYTHON lib$PYTHON-stdlib $PYTHON-minimal $PYTHON-venv lib$PYTHON-minimal
 	do
-		[ -e download ] && rm download
-  		wget -q https://packages.debian.org/buster/amd64/$PKG/download 
-
-		URL=$(grep ftp.fr.debian.org download | cut -d '"' -f2)
-		if [ "$URL" = "" ]
-		then
-  			URL=$( grep http://security.debian.org/debian-security/ download  | cut -d '"' -f2)
-		fi
-		echo "\n \n Get $URL .. "
-		wget -q $URL
-		pwd
-		ls
-		DEB=$(basename $URL)
-		dpkg -x $DEB .
-		rm $DEB
+		install-local-deb buster $PKG
 	done
 	find usr/lib/$PYTHON -type f -print0 | xargs -0 sed -i "s|usr|$PWD/usr|g"
         sed -i "s|usr|$PWD/usr|g" usr/bin/lessc 
