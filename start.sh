@@ -1,4 +1,4 @@
-ODOO="18"
+ODOO="16"
 
 install-local-deb () {
   debian=$1
@@ -73,8 +73,51 @@ fi
 
 [ ! -e odoo-$ODOO ] && git clone --depth 1 -b $ODOO".0" https://github.com/odoo/odoo && mv odoo odoo-$ODOO
 
-$PYTHON -m pip install -r odoo-$ODOO-requirements.txt || exit 1
+# $PYTHON -m pip install -r odoo-$ODOO-requirements.txt || exit 1
 
-[ ! -e addons-$ODOO/server-brand ] && install -d addons-$ODOO/server-brand && git clone --depth 1 -b $ODOO".0" git@github.com:OCA/server-brand.git  addons-$ODOO/server-brand
 
-$PYTHON ./odoo-$ODOO/odoo-bin -d odoo-$ODOO --db_host localhost --db_port=54$ODOO -r odoo -w odoo -i base --addons-path=$PWD/addons-$ODOO/server-brand/,$PWD/odoo-$ODOO/addons
+# [ ! -e addons-$ODOO/server-brand ] && install -d addons-$ODOO/server-brand && git clone --depth 1 -b $ODOO".0" git@github.com:OCA/server-brand.git  addons-$ODOO/server-brand
+
+echo > opt.txt
+
+if [ -e addons-oca ]
+then
+    install -d addons-oca-$ODOO
+    cd addons-oca-$ODOO
+	ls ../addons-oca | while read ADDON
+	do
+          echo "OPT=\$OPT,$PWD/$ADDON" >> ../opt.txt
+	  cat  ../addons-oca/$ADDON | while read GIT
+	  do
+		git clone --depth 1 -b $ODOO".0" $GIT
+	  done
+	done
+    cd ..
+fi
+
+if [ -e addons ]
+then
+    install -d addons-$ODOO
+    cd addons-$ODOO
+	ls ../addons | while read ADDON
+	do
+	  install -d $ADDON
+	  cd $ADDON
+          echo "OPT=\$OPT,$PWD/" >> ../../opt.txt
+	  cat ../../addons/$ADDON | while read GIT
+	  do
+		git clone --depth 1 -b $ODOO".0" $GIT
+	  done
+	  cd ..
+	done
+    cd ..
+fi
+
+OPT=""
+
+source opt.txt
+rm opt.txt
+
+echo " OPT : $OPT"
+
+$PYTHON ./odoo-$ODOO/odoo-bin -d odoo-$ODOO --db_host localhost --db_port=54$ODOO -r odoo -w odoo -i base --addons-path=$PWD/odoo-$ODOO/addons$OPT
