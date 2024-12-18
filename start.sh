@@ -1,4 +1,4 @@
-ODOO="14"
+ODOO="18"
 
 install-local-deb () {
   debian=$1
