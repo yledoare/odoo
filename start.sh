@@ -20,7 +20,6 @@ install-local-deb () {
 		touch $debian-$deb-ok
 }
 
-
 docker ps |grep docker-db-1 
 
 if [ $? = 1 ] && [ -e docker ]
@@ -30,7 +29,7 @@ then
 	cd ..
 fi
 
-if [ $ODOO == "12" ] || [ $ODOO == "13" ]
+if [ $ODOO == "12" ] || [ $ODOO == "13" ] || [ $ODOO == "14" ]
 then
 
 PYTHONLIB="python-3.7"
@@ -57,26 +56,11 @@ $PYTHON -m pip install wheel
 $PYTHON -m pip install markupsafe==2.0.1
 
 else
+
 	which python3.10 && PYTHON="python3.10" && PYTHONLIB="python-3.10"
 	which python3.11 && PYTHON="python3.11" && PYTHONLIB="python-3.11"
 	which python3.12 && PYTHON="python3.12" && PYTHONLIB="python-3.12"
 	which python3.13 && PYTHON="python3.13" && PYTHONLIB="python-3.13"
-
-	if [ $ODOO == "15" ] 
-	then
-	  export PATH=$PWD/usr/bin:$PWD/usr/local/bin:$PATH
-	  export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD/usr/lib/x86_64-linux-gnu/
-	  for PKG in gcc gcc-10 g++-10 gcc-10-base cpp-10 libisl23 libmpc3 libgcc-10-dev \
-		  libc6-dev libstdc++-10-dev linux-libc-dev binutils binutils-x86-64-linux-gnu libbinutils \
-		  libctf0 libc6
-	  do
-		  [ ! -e bullseye-$PKG-ok ] && install-local-deb bullseye $PKG
-	  done
-	  #FIXME
- 	  #$PYTHON -m pip install libsass==0.14.0 || exit 2
-	fi
-
-	# exit 1
 
   [ ! -e venv ] && $PYTHON -m venv venv
   . venv/bin/activate
@@ -84,14 +68,56 @@ else
   [ -e /home/linuxconsole2024/x86_64/lib/$PYTHON/site-packages/ ] && export PYTHONPATH=/home/linuxconsole2024/x86_64/lib/$PYTHON/site-packages/:$PYTHONPATH
 
  [ $ODOO == "16" ] && $PYTHON -m pip install psutil reportlab
- [ $ODOO == "15" ] && $PYTHON -m pip install psutil reportlab
 
 fi
 
 [ ! -e odoo-$ODOO ] && git clone --depth 1 -b $ODOO".0" https://github.com/odoo/odoo && mv odoo odoo-$ODOO
 
-$PYTHON -m pip install -r odoo-$ODOO-requirements.txt || exit 1
+$PYTHON -m pip install -r requirements/odoo-$ODOO-requirements.txt || exit 1
 
-[ ! -e addons-$ODOO/server-brand ] && install -d addons-$ODOO/server-brand && git clone --depth 1 -b $ODOO".0" git@github.com:OCA/server-brand.git  addons-$ODOO/server-brand
 
-$PYTHON ./odoo-$ODOO/odoo-bin -d odoo-$ODOO --db_host localhost --db_port=54$ODOO -r odoo -w odoo -i base --addons-path=$PWD/addons-$ODOO/server-brand/,$PWD/odoo-$ODOO/addons
+# [ ! -e addons-$ODOO/server-brand ] && install -d addons-$ODOO/server-brand && git clone --depth 1 -b $ODOO".0" git@github.com:OCA/server-brand.git  addons-$ODOO/server-brand
+
+echo > opt.txt
+
+if [ -e addons-oca ]
+then
+    install -d addons-oca-$ODOO
+    cd addons-oca-$ODOO
+	ls ../addons-oca | while read ADDON
+	do
+          echo "OPT=\$OPT,$PWD/$ADDON" >> ../opt.txt
+	  cat  ../addons-oca/$ADDON | while read GIT
+	  do
+		git clone --depth 1 -b $ODOO".0" $GIT
+	  done
+	done
+    cd ..
+fi
+
+if [ -e addons ]
+then
+    install -d addons-$ODOO
+    cd addons-$ODOO
+	ls ../addons | while read ADDON
+	do
+	  install -d $ADDON
+	  cd $ADDON
+          echo "OPT=\$OPT,$PWD/" >> ../../opt.txt
+	  cat ../../addons/$ADDON | while read GIT
+	  do
+		git clone --depth 1 -b $ODOO".0" $GIT
+	  done
+	  cd ..
+	done
+    cd ..
+fi
+
+OPT=""
+
+source opt.txt
+rm opt.txt
+
+echo " OPT : $OPT"
+
+$PYTHON ./odoo-$ODOO/odoo-bin -d odoo-$ODOO --db_host localhost --db_port=54$ODOO -r odoo -w odoo -i base --addons-path=$PWD/odoo-$ODOO/addons$OPT
