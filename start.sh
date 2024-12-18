@@ -1,6 +1,4 @@
-ODOO="11"
-PYTHONLIB="python-3.7"
-PYTHON="python3.7"
+ODOO="16"
 
 docker ps |grep docker-db-1 
 
@@ -10,6 +8,13 @@ then
 	docker-compose up -d
 	cd ..
 fi
+
+if [ $ODOO == "11" ]
+then
+
+PYTHONLIB="python-3.7"
+PYTHON="python3.7"
+
 
 if [ ! -e usr ]
 then
@@ -44,16 +49,24 @@ $PYTHON -m pip install setuptools
 $PYTHON -m pip install wheel
 $PYTHON -m pip install markupsafe==2.0.1
 
-# [ ! -e venv ] && $PYTHON -m venv venv
-# . venv/bin/activate
+else
+
+	which python3.10 && PYTHON="python3.10" && PYTHONLIB="python-3.10"
+	which python3.11 && PYTHON="python3.11" && PYTHONLIB="python-3.11"
+	which python3.12 && PYTHON="python3.12" && PYTHONLIB="python-3.12"
+	which python3.13 && PYTHON="python3.13" && PYTHONLIB="python-3.13"
+
+  [ ! -e venv ] && $PYTHON -m venv venv
+  . venv/bin/activate
+
+  [ -e /home/linuxconsole2024/x86_64/lib/$PYTHON/site-packages/ ] && export PYTHONPATH=/home/linuxconsole2024/x86_64/lib/$PYTHON/site-packages/:$PYTHONPATH
+
+ [ $ODOO == "16" ] && $PYTHON -m pip install psutil reportlab
+
+fi
 
 [ ! -e odoo-$ODOO ] && git clone --depth 1 -b $ODOO".0" https://github.com/odoo/odoo && mv odoo odoo-$ODOO
 
-#[ -e /home/linuxconsole2024/x86_64/ ] && grep psycopg2 odoo-$ODOO/requirements.txt && cd odoo-$ODOO && pwd && patch -p1 < ../linuxconsole-odoo.patch && cd ..
-
 $PYTHON -m pip install -r odoo-$ODOO-requirements.txt || exit 1
 
-install -d addons
-
-#[ -e /home/linuxconsole2024/x86_64/lib/python3.10/site-packages/ ] && export PYTHONPATH=/home/linuxconsole2024/x86_64/lib/python3.10/site-packages/:$PYTHONPATH
-$PYTHON ./odoo-$ODOO/odoo-bin -d odoo-$ODOO --db_host localhost --db_port=54$ODOO -r odoo -w odoo -i base # --addons-path=$PWD/addons,$PWD/odoo/addons #-i
+$PYTHON ./odoo-$ODOO/odoo-bin -d odoo-$ODOO --db_host localhost --db_port=54$ODOO -r odoo -w odoo -i base # --addons-path=$PWD/addons,$PWD/odoo/addons
