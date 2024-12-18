@@ -1,4 +1,4 @@
-ODOO="12"
+ODOO="18"
 
 docker ps |grep docker-db-1 
 
@@ -69,4 +69,6 @@ fi
 
 $PYTHON -m pip install -r odoo-$ODOO-requirements.txt || exit 1
 
-$PYTHON ./odoo-$ODOO/odoo-bin -d odoo-$ODOO --db_host localhost --db_port=54$ODOO -r odoo -w odoo -i base # --addons-path=$PWD/addons,$PWD/odoo/addons
+[ ! -e addons-$ODOO/server-brand ] && install -d addons-$ODOO/server-brand && git clone --depth 1 -b $ODOO".0" git@github.com:OCA/server-brand.git  addons-$ODOO/server-brand
+
+$PYTHON ./odoo-$ODOO/odoo-bin -d odoo-$ODOO --db_host localhost --db_port=54$ODOO -r odoo -w odoo -i base --addons-path=$PWD/addons-$ODOO/server-brand/,$PWD/odoo-$ODOO/addons
