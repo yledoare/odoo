@@ -53,7 +53,7 @@ $PYTHON -m pip install markupsafe==2.0.1
 
 $PYTHON -m pip install -r odoo-$ODOO-requirements.txt || exit 1
 
-install -d addons
+[ -e addons ] && OPTS="--addons-path=$PWD/addons,$PWD/odoo-$ODOO/addons"
 
 #[ -e /home/linuxconsole2024/x86_64/lib/python3.10/site-packages/ ] && export PYTHONPATH=/home/linuxconsole2024/x86_64/lib/python3.10/site-packages/:$PYTHONPATH
-$PYTHON ./odoo-$ODOO/odoo-bin -d odoo-$ODOO --db_host localhost --db_port=54$ODOO -r odoo -w odoo -i base # --addons-path=$PWD/addons,$PWD/odoo/addons #-i
+$PYTHON ./odoo-$ODOO/odoo-bin -d odoo-$ODOO --db_host localhost --db_port=54$ODOO -r odoo -w odoo -i base $OPTS
