@@ -48,7 +48,7 @@ python3.7 -m pip install markupsafe==2.0.1
 # . venv/bin/activate
 [ ! -e odoo-$ODOO ] && git clone --depth 1 -b 11.0 https://github.com/odoo/odoo && mv odoo odoo-$ODOO
 #[ -e /home/linuxconsole2024/x86_64/ ] && grep psycopg2 odoo-$ODOO/requirements.txt && cd odoo-$ODOO && pwd && patch -p1 < ../linuxconsole-odoo.patch && cd ..
-python3.7 -m pip install -r odoo-11/requirements.txt || exit 1
+python3.7 -m pip install -r odoo-11-requirements.txt || exit 1
 
 install -d addons
 
