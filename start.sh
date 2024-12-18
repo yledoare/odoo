@@ -73,7 +73,7 @@ fi
 
 [ ! -e odoo-$ODOO ] && git clone --depth 1 -b $ODOO".0" https://github.com/odoo/odoo && mv odoo odoo-$ODOO
 
-# $PYTHON -m pip install -r odoo-$ODOO-requirements.txt || exit 1
+$PYTHON -m pip install -r requirements/odoo-$ODOO-requirements.txt || exit 1
 
 
 # [ ! -e addons-$ODOO/server-brand ] && install -d addons-$ODOO/server-brand && git clone --depth 1 -b $ODOO".0" git@github.com:OCA/server-brand.git  addons-$ODOO/server-brand
