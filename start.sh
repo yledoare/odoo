@@ -25,9 +25,12 @@ docker ps |grep docker-db-1
 if [ $? = 1 ] && [ -e docker ]
 then
 	cd docker
-	docker-compose up -d
+	docker-compose up -d || docker compose up -d || exit 1
 	cd ..
 fi
+
+which pg_config || apt-get install -y postgresql-common libpq-dev python3-dev libldap2-dev  libsasl2-dev
+which pg_config || exit 2
 
 if [ $ODOO == "12" ] || [ $ODOO == "13" ] || [ $ODOO == "14" ]
 then
