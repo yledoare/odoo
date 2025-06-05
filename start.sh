@@ -103,7 +103,7 @@ then
 	do
 	  install -d $ADDON
 	  cd $ADDON
-          echo "OPT=\$OPT,$PWD/" >> ../../opt.txt
+          echo "OPT=\$OPT,$PWD/$ADDON" >> ../../opt.txt
 	  cat ../../addons/$ADDON | while read GIT
 	  do
 		git clone --depth 1 -b $ODOO".0" $GIT
