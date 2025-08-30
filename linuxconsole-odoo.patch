@@ -1,0 +1,35 @@
+diff --git a/requirements.txt b/requirements.txt
+index f47d2d75..954eec9a 100644
+--- a/requirements.txt
++++ b/requirements.txt
+@@ -19,10 +19,6 @@ freezegun==1.1.0 ; python_version < '3.11'  # (Jammy)
+ freezegun==1.2.1 ; python_version >= '3.11' and python_version < '3.13'
+ freezegun==1.5.1 ; python_version >= '3.13'
+ geoip2==2.9.0
+-gevent==21.8.0 ; sys_platform != 'win32' and python_version == '3.10'  # (Jammy)
+-gevent==22.10.2; sys_platform != 'win32' and python_version > '3.10' and python_version < '3.12'
+-gevent==24.2.1 ; sys_platform != 'win32' and python_version >= '3.12' and python_version < '3.13'  # (Noble)
+-gevent==24.11.1 ; sys_platform != 'win32' and python_version >= '3.13'  # (Trixie)
+ greenlet==1.1.2 ; sys_platform != 'win32' and python_version == '3.10'  # (Jammy)
+ greenlet==2.0.2 ; sys_platform != 'win32' and python_version > '3.10' and python_version < '3.12'
+ greenlet==3.0.3 ; sys_platform != 'win32' and python_version >= '3.12' and python_version < '3.13' # (Noble)
+@@ -54,10 +50,6 @@ polib==1.1.1
+ psutil==5.9.0 ; python_version <= '3.10' 
+ psutil==5.9.4 ; python_version > '3.10' and python_version < '3.12' 
+ psutil==5.9.8 ; python_version >= '3.12' # (Noble) Mostly to have a wheel package
+-psycopg2==2.9.2 ; python_version == '3.10' # (Jammy)
+-psycopg2==2.9.5 ; python_version == '3.11'
+-psycopg2==2.9.9 ; python_version >= '3.12' and python_version < '3.13' # (Noble)
+-psycopg2==2.9.10 ; python_version >= '3.13' # (Trixie)
+ pyopenssl==21.0.0 ; python_version < '3.12'
+ pyopenssl==24.1.0 ; python_version >= '3.12' # (Noble) min 23.2.0, pinned for compatibility with cryptography==42.0.8 and security patches
+ PyPDF2==1.26.0 ; python_version <= '3.10'
+@@ -66,8 +58,6 @@ pypiwin32 ; sys_platform == 'win32'
+ pyserial==3.5
+ python-dateutil==2.8.1 ; python_version < '3.11'
+ python-dateutil==2.8.2 ; python_version >= '3.11'
+-python-ldap==3.4.0 ; sys_platform != 'win32' and python_version < '3.12' # min version = 3.2.0 (Focal with security backports)
+-python-ldap==3.4.4 ; sys_platform != 'win32' and python_version >= '3.12'  # (Noble) Mostly to have a wheel package
+ python-stdnum==1.17 ; python_version < '3.11'  # (jammy)
+ python-stdnum==1.19 ; python_version >= '3.11'
+ pytz  # no version pinning to avoid OS perturbations

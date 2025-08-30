@@ -97,8 +97,15 @@ fi
 
 [ ! -e odoo-$ODOO ] && git clone --depth 1 -b $ODOO".0" https://github.com/odoo/odoo && mv odoo odoo-$ODOO
 
-$PYTHON -m pip install -r requirements/odoo-$ODOO-requirements.txt || exit 1
-
+if [ -e /home/linuxconsole2024/x86_64/ ] 
+then
+  cd odoo-$ODOO
+  grep psycopg2 requirements.txt && patch -p1 < ../linuxconsole-odoo.patch 
+  cd ..
+  $PYTHON -m pip install -r odoo-$ODOO/requirements.txt || exit 1
+else
+  $PYTHON -m pip install -r requirements/odoo-$ODOO-requirements.txt || exit 1
+fi
 
 # [ ! -e addons-$ODOO/server-brand ] && install -d addons-$ODOO/server-brand && git clone --depth 1 -b $ODOO".0" git@github.com:OCA/server-brand.git  addons-$ODOO/server-brand
 
