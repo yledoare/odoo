@@ -149,6 +149,8 @@ OPT=""
 source opt.txt
 rm opt.txt
 
-echo " OPT : $OPT"
+MODULE="base"
 
-$PYTHON ./odoo-$ODOO/odoo-bin -d odoo-$ODOO --db_host localhost --db_port=54$ODOO -r odoo -w odoo -i base --addons-path=$PWD/odoo-$ODOO/addons$OPT
+echo " OPT : $OPT, MODULE: $MODULE"
+
+$PYTHON ./odoo-$ODOO/odoo-bin -d odoo-$ODOO --db_host localhost --db_port=54$ODOO -r odoo -w odoo -i $MODULE -u $MODULE --without-demo=all --addons-path=$PWD/odoo-$ODOO/addons$OPT
