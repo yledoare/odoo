@@ -1,6 +1,6 @@
 version: '3.1'
 services:
-  db:
+  db16:
     image: postgres:13
     ports:
       - "5416:5432"

@@ -20,12 +20,12 @@ install-local-deb () {
 		touch $debian-$deb-ok
 }
 
-docker ps |grep docker-db-1 
+docker ps |grep docker-db16-1 
 
 if [ $? = 1 ] && [ -e docker ]
 then
 	cd docker
-	docker-compose up -d
+	docker-compose up -d || docker compose up -d
 	cd ..
 fi
 
@@ -120,4 +120,11 @@ rm opt.txt
 
 echo " OPT : $OPT"
 
-$PYTHON ./odoo-$ODOO/odoo-bin -d odoo-$ODOO --db_host localhost --db_port=54$ODOO -r odoo -w odoo -i base --addons-path=$PWD/odoo-$ODOO/addons$OPT
+MODULE="agap_website_sale"
+MODULE="base"
+
+echo " OPT : $OPT, MODULE: $MODULE"
+
+$PYTHON ./odoo-$ODOO/odoo-bin -d odoo-$ODOO --db_host localhost --db_port=54$ODOO -r odoo -w odoo -i $MODULE -u $MODULE --without-demo=all --addons-path=$PWD/odoo-$ODOO/addons$OPT
+
+#$PYTHON ./odoo-$ODOO/odoo-bin -d odoo-$ODOO --db_host localhost --db_port=54$ODOO -r odoo -w odoo -i base --addons-path=$PWD/odoo-$ODOO/addons$OPT
