@@ -8,7 +8,7 @@ which pg_config || exit 2
 DEBIAN=""
 [ -e /etc/debian_version ] && grep trixie /etc/debian_version && DEBIAN="TRIXIE"
 
-if [ "$DEBIAN" = "TRIXIE" ]
+if [ "$DEBIAN" = "TRIXIE" ] || [ -e /home/linuxconsole2024/x86_64/lib ]
 then
 	if [ ! -e usr ]
 	then
@@ -63,7 +63,7 @@ echo > opt.txt
 
 . include/addons-oca.sh
 #. include/addons.sh
-. include/oca-pr.sh
+#. include/oca-pr.sh
 
 OPT=""
 
