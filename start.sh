@@ -1,4 +1,4 @@
-ODOO="18"
+ODOO="19"
 MODULE="base"
 
 . include/functions.sh
