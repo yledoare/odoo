@@ -1,4 +1,5 @@
 ODOO="18"
+MODULE="base"
 
 . include/functions.sh
 
@@ -46,7 +47,7 @@ fi
 echo > opt.txt
 
 . include/addons-oca.sh
-#. include/addons.sh
+. include/addons.sh
 #. include/oca-pr.sh
 
 OPT=""
@@ -56,7 +57,6 @@ rm opt.txt
 
 # connector
 $PYTHON -m pip install cachetools
-MODULE="base"
 
 echo " OPT : $OPT, MODULE: $MODULE"
 
