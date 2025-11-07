@@ -35,7 +35,7 @@ then
 		  [ "$FIRST" != "#" ] && [ ! -e $ADDON ] && git clone --depth 1 -b $ODOO".0" $GIT
 		  [ "$FIRST" != "#" ] && [ ! -e $ADDON ] && git clone --depth 1 $GIT
       [ "$FIRST" != "#" ] && [ ! -e $ADDON ] && exit 1
-      MODULE=$ADDON
+      echo "MODULE=$ADDON" >> ../opt.txt
 	  done
 	done
   cd ..
