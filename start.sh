@@ -1,5 +1,18 @@
 ODOO="18"
 
+install -d docker
+
+echo 'version: "3.1"
+services:
+  db'$ODOO':
+    image: postgres:13
+    ports:
+      - "54'$ODOO':5432"
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD=odoo
+      - POSTGRES_USER=odoo' > docker/docker-compose.yml
+
 install-local-deb () {
   debian=$1
   deb=$2
@@ -20,7 +33,7 @@ install-local-deb () {
 		touch $debian-$deb-ok
 }
 
-docker ps |grep docker-db-1 
+docker ps |grep docker-db$ODOO-1 
 
 if [ $? = 1 ] && [ -e docker ]
 then
@@ -29,7 +42,7 @@ then
 	cd ..
 fi
 
-which pg_config || apt-get install -y postgresql-common libpq-dev python3-dev libldap2-dev  libsasl2-dev
+which pg_config || sudo apt-get install -y postgresql-common libpq-dev python3-dev libldap2-dev  libsasl2-dev
 which pg_config || exit 2
 
 DEBIAN=""
@@ -86,6 +99,7 @@ else
 	which python3.12 && PYTHON="python3.12" && PYTHONLIB="python-3.12"
 	which python3.13 && PYTHON="python3.13" && PYTHONLIB="python-3.13"
 
+  [ ! -e venv ] && echo "Run " $PYTHON -m venv venv
   [ ! -e venv ] && $PYTHON -m venv venv
   . venv/bin/activate
 
@@ -104,7 +118,7 @@ then
   cd ..
   $PYTHON -m pip install -r odoo-$ODOO/requirements.txt || exit 1
 else
-  $PYTHON -m pip install -r requirements/odoo-$ODOO-requirements.txt || exit 1
+  $PYTHON -m pip install -r requirements/odoo-$ODOO-requirements.txt || $PYTHON -m pip install -r odoo-$ODOO/requirements.txt || exit 1
 fi
 
 # [ ! -e addons-$ODOO/server-brand ] && install -d addons-$ODOO/server-brand && git clone --depth 1 -b $ODOO".0" git@github.com:OCA/server-brand.git  addons-$ODOO/server-brand
@@ -149,6 +163,8 @@ OPT=""
 source opt.txt
 rm opt.txt
 
+# connector
+$PYTHON -m pip install cachetools
 MODULE="base"
 
 echo " OPT : $OPT, MODULE: $MODULE"
