@@ -149,6 +149,8 @@ OPT=""
 source opt.txt
 rm opt.txt
 
+# connector
+$PYTHON -m pip install cachetools
 MODULE="base"
 
 echo " OPT : $OPT, MODULE: $MODULE"
