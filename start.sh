@@ -1,4 +1,4 @@
-ODOO="19"
+ODOO="18"
 MODULE="base"
 
 . include/functions.sh
@@ -40,6 +40,7 @@ echo > opt.txt
 
 . include/addons-oca.sh
 . include/addons.sh
+#. include/myaddons.sh
 #. include/oca-pr.sh
 
 OPT=""
