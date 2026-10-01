@@ -38,12 +38,15 @@ $PYTHON -m pip install -r requirements/odoo-$ODOO-requirements.txt || $PYTHON -m
 
 echo > opt.txt
 
-. include/addons-oca.sh
+#. include/addons-oca.sh
 . include/addons.sh
 #. include/myaddons.sh
 #. include/oca-pr.sh
 
 OPT=""
+
+#cat opt.txt
+#exit 1
 
 source opt.txt
 rm opt.txt
@@ -53,6 +56,9 @@ $PYTHON -m pip install cachetools
 
 # Sales deps
 $PYTHON -m pip install phonenumbers
+
+# plutdooprint
+$PYTHON -m pip install plutoprint
 
 echo " OPT : $OPT, MODULE: $MODULE" && sleep 3
 
