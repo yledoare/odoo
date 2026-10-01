@@ -51,6 +51,9 @@ rm opt.txt
 # connector
 $PYTHON -m pip install cachetools
 
+# Sales deps
+$PYTHON -m pip install phonenumbers
+
 echo " OPT : $OPT, MODULE: $MODULE" && sleep 3
 
 $PYTHON ./odoo-$ODOO/odoo-bin -d odoo-$ODOO --db_host localhost --db_port=54$ODOO -r odoo -w odoo -i $MODULE -u $MODULE --without-demo=all --addons-path=$PWD/odoo-$ODOO/addons$OPT
